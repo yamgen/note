@@ -49,6 +49,16 @@ Python 3.10.6
 > py -3.10 -m pip install requests
 ```
 
+#### Pythonの仮想環境
+- Python開発では多くの場合サードパーティライブラリを使用する。
+- 不要なライブラリを実行環境へリリースしないために、仮想環境を作成することが推奨されている。
+- Pythonの仮想環境を作成することで、プロジェクトごとにパッケージ、pythonランタイムのバージョンを管理することができる。
+
+![仮想環境の概念図](images/venv.jpg)
+- root環境には複数のPythonバージョンがインストールされ `py` コマンドを経由してPythonが実行される
+- 仮想環境ではPythonはバージョン指定して作成されるため、root環境とは異なるバージョンのPythonが実行される
+- 仮想環境ごとに外部ライブラリをインストールすることができる
+
 #### venvコマンド
 - venvはPythonの仮想環境を作成するためのコマンドである。
 - 仮想環境を作成することで、プロジェクトごとにパッケージ、pythonランタイムのバージョンを管理することができる。
@@ -58,6 +68,64 @@ Python 3.10.6
 ```
 > py -3.10 -m venv .venv
 ```
+- .venvというディレクトリが作成される。
 
 #### 仮想環境の有効化
-- 
+- /path/to/venv/Scripts/activate.batを実行することで仮想環境を有効化することができる。
+
+```
+> .venv\Scripts\activate.bat
+(.venv) >
+```
+- 仮想環境が有効化されると、プロンプトの先頭に(.venv)が表示される。
+
+- VScodeのターミナルからも仮想環境を有効化することができる。
+- Ctrl + Shift + Pでコマンドパレットを開き、Python: Select Interpreterを選択する。
+- ★.venv\Scripts\python.exeを選択する。
+- プロンプトの先頭に(.venv)が表示される。
+- ターミナルがPowerShellの場合は、権限の問題で仮想環境が有効化されない場合がある。
+  - ターミナルをcmdに変更するか、PowerShellの権限を変更する。
+  - PowerShellの権限を変更する設定をsettings.jsonに記載する
+
+```json:settings.json
+{
+    "terminal.integrated.env.windows": {
+        "PSExecutionPolicyPreference": "RemoteSigned"
+    }
+}
+```
+
+#### requirements.txt
+- requirements.txtはpipコマンドでインストールするパッケージを記載するファイルである。
+
+```txt:requirements.txt
+requests==2.26.0
+django==3.2.8
+```
+
+- pipコマンドでrequirements.txtに記載されたパッケージを一括インストールすることができる。
+
+```
+(.venv)> pip install -r requirements.txt
+```
+
+- requirements.txtは環境ごとに作成すると便利である。
+
+requirements.txt
+```txt:requirements_dev.txt
+requests==2.26.0
+django==3.2.8
+```
+
+requirements_dev.txt
+```txt:requirements_dev.txt
+-r requirements.txt
+black==21.10b0
+django-sslserver==0.22
+```
+
+- requirements.txtを作成する場合は、pipコマンドでインストールしたパッケージを記載する。
+
+```
+pip freeze > requirements.txt
+```
